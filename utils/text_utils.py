@@ -1,3 +1,7 @@
+import re
+import utils.cleaners as cleaners
+
+
 valid_symbols = [
     'AA', 'AA0', 'AA1', 'AA2', 'AE', 'AE0', 'AE1', 'AE2', 'AH', 'AH0', 'AH1', 'AH2',
     'AO', 'AO0', 'AO1', 'AO2', 'AW', 'AW0', 'AW1', 'AW2', 'AY', 'AY0', 'AY1', 'AY2',
@@ -18,4 +22,44 @@ _characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!'(),-.:;? "
 _arpabet = ['@' + s for s in valid_symbols]
 
 symbols = [_pad, _eos] + list(_characters) + _arpabet
+_symbol_to_id = {s: i for i, s in enumerate(symbols)}
 
+_curly_re = re.compile(r'(.*?)\{(.+?)\}(.*)')
+
+
+def text_to_sequence(text, cleaner_names):
+    sequence = []
+    while len(text):
+        m = _curly_re.match(text)
+        if not m:
+            sequence += _symbols_to_sequence(_clean_text(text, cleaner_names))
+            break
+        sequence += _symbols_to_sequence(
+            _clean_text(m.group(1), cleaner_names))
+        sequence += _arpabet_to_sequence(m.group(2))
+        text = m.group(3)
+
+    # Append EOS token
+    sequence.append(_symbol_to_id['~'])
+    return sequence
+
+
+def _symbols_to_sequence(symbols):
+    return [_symbol_to_id[s] for s in symbols if _should_keep_symbol(s)]
+
+
+def _arpabet_to_sequence(text):
+    return _symbols_to_sequence(['@' + s for s in text.split()])
+
+
+def _clean_text(text, cleaner_names):
+    for name in cleaner_names:
+        cleaner = getattr(cleaners, name)
+        if not cleaner:
+            raise Exception('Unknown cleaner: %s' % name)
+        text = cleaner(text)
+    return text
+
+
+def _should_keep_symbol(s):
+    return s in _symbol_to_id and s is not '_' and s is not '~'
