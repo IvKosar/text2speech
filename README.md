@@ -19,13 +19,14 @@
     - [ ] Benchmarking
 
 ## Model Architecture
-![tacotron architecture diagram](https://ai2-s2-public.s3.amazonaws.com/figures/2017-08-08/a072c2a400f62f720b68dc54a662fb1ae115bf06/2-Figure1-1.png)
+![tacotron architecture diagram](imgs/Tacotron.jpg)
 
-
+### CBHG submodule
+![CBHG module](imgs/CBHG.png)
 
 ## Dependencies
 
-### Project using such dependencies:
+### Project uses such dependencies:
 - 1
 
 
