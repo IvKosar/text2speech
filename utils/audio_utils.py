@@ -9,7 +9,7 @@ def save_wav(wav, path, sample_rate):
 
 def load_wav(filename, sample_rate):
     audio = librosa.core.load(filename, sr=sample_rate)
-    return audio
+    return np.asarray(audio[0], dtype=np.float32)
 
 
 def amplitude_to_dbs(amplitude):
