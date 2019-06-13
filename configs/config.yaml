@@ -13,6 +13,8 @@ train:
   lr: 0.001
   warmup_steps: 4000
   save_step: 1000
+  checkpoint: False
+  output_path: "trained_models/"
 
 batch_size: 16
 eval_batch_size: 8
