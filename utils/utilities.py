@@ -1,16 +1,15 @@
-import numpy as np
-from torch.nn.utils import clip_grad_norm
-import os
 import datetime
+import os
 from collections import OrderedDict
-from torch import save
-
 
 import matplotlib
 import numpy as np
+from torch import save
+from torch.nn.utils import clip_grad_norm
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
 
 def check_update(model, grad_clip, grad_top):
     """
@@ -51,7 +50,6 @@ def save_checkpoint(model, optimizer, model_loss, out_path,
     save(state, checkpoint_path)
 
 
-
 def _trim_model_state_dict(state_dict):
     r"""Remove 'module.' prefix from state dictionary. It is necessary as it
     is loded for the next time by model.load_state(). Otherwise, it complains
@@ -62,7 +60,6 @@ def _trim_model_state_dict(state_dict):
         name = k[7:]  # remove `module.`
         new_state_dict[name] = v
     return new_state_dict
-
 
 
 def create_experiment_folder(root_path):
