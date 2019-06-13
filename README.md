@@ -6,8 +6,10 @@
 
 - [Stages of project](#stages-of-project)
 - [Dataset](#dataset)
-- [Model architecture](#model_architecture)
+- [Model Architecture](#model_architecture)
 - [CBHG submodule](#cbhg-submodule)
+- [Dependencies](#dependencies)
+- [Literature and references](#literature-and-references)
 
 
 ## Stages of project:
