@@ -25,6 +25,7 @@ def prepare_directories():
 
 
 def train():
+    prepare_directories()
     metric_counter = MetricCounter(exp_name=configs["experiment_name"])
 
     parameters = dict(audio_configs)
@@ -61,9 +62,9 @@ def train():
         run_validate(model, val_loader, criterion, metric_counter, n_priority_freq)
         if metric_counter.update_best_model():
             torch.save(model.state_dict(), os.path.join(os.path.join(WEIGHTS_SAVE_PATH,
-                                                                     f"best_{configs['experiment_name']}")))
+                                                                     f"best_{configs['experiment_name']}.pth.tar")))
         torch.save(model.state_dict(), os.path.join(os.path.join(WEIGHTS_SAVE_PATH,
-                                                                 f"last_{configs['experiment_name']}")))
+                                                                 f"last_{configs['experiment_name']}.pth.tar")))
         print(metric_counter.loss_message())
         logging.debug(
             f"Experiment Name: {configs['experiment_name']}, Epoch: {epoch}, Loss: {metric_counter.loss_message()}")

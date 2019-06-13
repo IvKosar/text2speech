@@ -5,7 +5,7 @@ data:
   data_path: "../LJSpeech-1.1"
   annotations_train: "metadata_train.csv"
   annotations_val: "metadata_val.csv"
-  output_path: "../tacotron_outputs"
+  output_path: "../tacotron_result"
 
 train:
   epochs: 200

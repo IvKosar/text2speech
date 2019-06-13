@@ -44,7 +44,7 @@ def griffin_lim(spectrogram, griffin_lim_iters, n_fft, hop_length, win_length):
     return y
 
 
-def find_endpoint(wav, sample_rate, threshold_db=-40, min_silence_sec=0.8):
+def find_endpoint(wav, sample_rate, threshold_db=-40, min_silence_sec=1.0):
     window_length = int(sample_rate * min_silence_sec)
     hop_length = int(window_length / 4)
     for x in range(hop_length, len(wav) - window_length, hop_length):
