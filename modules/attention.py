@@ -1,5 +1,5 @@
 import torch.nn as nn
-from torch import cat, bmm
+from torch import cat, bmm, tanh
 from torch.nn import functional as F
 
 
@@ -19,7 +19,7 @@ class Attention(nn.Module):
         processed_annots = self.annot_layer(input=annots)
 
         # (batch, max_time)
-        return self.v(F.tanh(processed_query + processed_annots)).squeeze(-1)
+        return self.v(tanh(processed_query + processed_annots)).squeeze(-1)
 
 
 class AttentionRNN(nn.Module):
@@ -36,5 +36,5 @@ class AttentionRNN(nn.Module):
         alignment = F.softmax(input=self.alignment_model(annots=annotations, query=rnn_output), dim=-1)
 
         # Attention context vector
-        context = bmm(batch1=alignment.unsqueeze(1), batch2=annotations).squeeze(1)
+        context = bmm(input=alignment.unsqueeze(1), mat2=annotations).squeeze(1)
         return rnn_output, context, alignment
