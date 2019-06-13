@@ -1,5 +1,6 @@
 from torch.nn import ReLU, Sigmoid, Linear, Module
 
+
 class Highway(Module):
     def __init__(self, in_size, out_size):
         super(Highway, self).__init__()
