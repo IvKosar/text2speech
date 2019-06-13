@@ -58,11 +58,14 @@ def train():
 
     n_priority_freq = int(3000 / (audio_configs["sample_rate"] * 0.5) * audio_configs["frequency"])
     for epoch in range(train_configs["epochs"]):
-        run_epoch(model, train_loader, optimizer, criterion, metric_counter, epoch, n_priority_freq)
+        audio_signal = run_epoch(model, train_loader, optimizer, criterion, metric_counter, epoch, n_priority_freq)
         run_validate(model, val_loader, criterion, metric_counter, n_priority_freq)
         if metric_counter.update_best_model():
             torch.save(model.state_dict(), os.path.join(os.path.join(WEIGHTS_SAVE_PATH,
                                                                      f"best_{configs['experiment_name']}.pth.tar")))
+            audio_signal = train_dataset.ap.spectrogram_to_wav(audio_signal.T)
+            metric_counter.write_audio_to_tensorboard("Audio", audio_signal, epoch, audio_configs["sample_rate"])
+
         torch.save(model.state_dict(), os.path.join(os.path.join(WEIGHTS_SAVE_PATH,
                                                                  f"last_{configs['experiment_name']}.pth.tar")))
         print(metric_counter.loss_message())
@@ -106,10 +109,11 @@ def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_
         total_loss.backward()
         optimizer.step()
 
-        metric_counter.add_losses(linear_loss.item(), mel_loss.item(), total_loss.item())
+        metric_counter.add_losses(linear_loss.item(), mel_loss, total_loss)
         metric_counter.write_to_tensorboard(current_step)
 
         num_iter += 1
+        return linear_output[0].data.cpu().numpy()
 
 
 def run_validate(model, dataloader, criterion, metric_counter, n_priority_freq):

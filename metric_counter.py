@@ -1,10 +1,7 @@
 from collections import defaultdict
-import logging
 
 import numpy as np
 from tensorboardX import SummaryWriter
-
-WINDOW_SIZE = 100
 
 
 class MetricCounter:
@@ -22,7 +19,7 @@ class MetricCounter:
             self.metrics[name].append(value)
 
     def loss_message(self):
-        metrics = ((k, np.mean(self.metrics[k][-WINDOW_SIZE:])) for k in
+        metrics = ((k, np.mean(self.metrics[k])) for k in
                    ("linear_loss", "mel_loss", "total_loss"))
         return '; '.join(map(lambda x: x[0] + '=' + '%.5f' % x[1], metrics))
 
@@ -33,8 +30,8 @@ class MetricCounter:
             self.writer.add_scalar(tag=(scalar_prefix + epoch_prefix + '_' + k), scalar_value=np.mean(self.metrics[k]),
                                    global_step=epoch_num)
 
-    def write_audio_to_tensorboard(self, exp_name, inputs, outputs, targets, epoch_num, validation=False):
-        pass
+    def write_audio_to_tensorboard(self, exp_name, outputs, step_num, sample_rate, validation=False):
+        self.writer.add_audio(exp_name, outputs, step_num, sample_rate=sample_rate)
 
     def update_best_model(self):
         cur_metric = np.mean(self.metrics['total_loss'])
