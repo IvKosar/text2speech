@@ -1,7 +1,8 @@
-from batch_norm_conv1d import BatchNormConv1d
-from highway import Highway
 from torch import cat
 from torch.nn import Module, ModuleList, Linear, GRU, ReLU, MaxPool1d
+
+from modules.batch_norm_conv1d import BatchNormConv1d
+from modules.highway import Highway
 
 
 class CBHG(Module):
