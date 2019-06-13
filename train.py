@@ -26,7 +26,7 @@ def prepare_directories():
 
 def train():
     prepare_directories()
-    metric_counter = MetricCounter(exp_name=os.path.join(LOG_DIR, configs["experiment_name"]))
+    metric_counter = MetricCounter(exp_name=LOG_DIR)
 
     parameters = dict(audio_configs)
     parameters["text_cleaner"] = configs["text_cleaner"]
