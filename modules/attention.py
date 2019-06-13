@@ -15,8 +15,8 @@ class Attention(nn.Module):
             # insert time-axis for broadcasting
             query = query.unsqueeze(dim=1)
         # (batch, 1, dim)
-        processed_query = self.query_layer(query)
-        processed_annots = self.annot_layer(annots)
+        processed_query = self.query_layer(input=query)
+        processed_annots = self.annot_layer(input=annots)
 
         # (batch, max_time)
         return self.v(F.tanh(processed_query + processed_annots)).squeeze(-1)
@@ -30,10 +30,10 @@ class AttentionRNN(nn.Module):
         self.score_mask_value = score_mask_value
 
     def forward(self, memory, context, rnn_state, annotations, mask=None, annotations_lengths=None):
-        rnn_output = self.rnn_cell(cat(tensors=(memory, context), dim=-1), rnn_state)
+        rnn_output = self.rnn_cell(input=cat(tensors=(memory, context), dim=-1), hx=rnn_state)
 
         # Alignment and context weight normalization
-        alignment = F.softmax(input=self.alignment_model(annotations, rnn_output), dim=-1)
+        alignment = F.softmax(input=self.alignment_model(annots=annotations, query=rnn_output), dim=-1)
 
         # Attention context vector
         context = bmm(batch1=alignment.unsqueeze(1), batch2=annotations).squeeze(1)

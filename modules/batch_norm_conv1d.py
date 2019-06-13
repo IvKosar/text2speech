@@ -10,5 +10,5 @@ class BatchNormConv1d(nn.Module):
         self.activation = activation
 
     def forward(self, x):
-        x = self.conv1d(x)
+        x = self.conv1d(input=x)
         return self.batch_norm(self.activation(x)) if self.activation is not None else self.batch_norm(x)

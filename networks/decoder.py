@@ -50,17 +50,19 @@ class Decoder(Module):
                     memory_input = memory[t - 1]
 
             processed_memory = self.prenet(memory_input)
-            attention_rnn_hidden, current_context_vec, alignment = self.attention_rnn(processed_memory,
-                                                                                      current_context_vec,
-                                                                                      attention_rnn_hidden, inputs)
-            decoder_input = self.project_to_decoder_in(cat(tensors=(attention_rnn_hidden, current_context_vec), dim=-1))
+            attention_rnn_hidden, current_context_vec, alignment = self.attention_rnn(memory=processed_memory,
+                                                                                      context=current_context_vec,
+                                                                                      rnn_state=attention_rnn_hidden,
+                                                                                      annotations=inputs)
+            decoder_input = self.project_to_decoder_in(
+                input=cat(tensors=(attention_rnn_hidden, current_context_vec), dim=-1))
             for idx in range(len(self.decoder_rnns)):
-                decoder_rnn_hiddens[idx] = self.decoder_rnns[idx](decoder_input, decoder_rnn_hiddens[idx])
+                decoder_rnn_hiddens[idx] = self.decoder_rnns[idx](input=decoder_input, hx=decoder_rnn_hiddens[idx])
                 # Residual connectinon
                 decoder_input = decoder_rnn_hiddens[idx] + decoder_input
             output = decoder_input
 
-            output = self.proj_to_mel(output)
+            output = self.proj_to_mel(input=output)
             outputs += [output]
             alignments += [alignment]
             t += 1
