@@ -26,10 +26,11 @@ class MetricCounter:
                    ("linear_loss", "mel_loss", "total_loss"))
         return '; '.join(map(lambda x: x[0] + '=' + '%.5f' % x[1], metrics))
 
-    def write_to_tensorboard(self, epoch_num, validation=False):
+    def write_to_tensorboard(self, epoch_num, validation=False, epoch=False):
         scalar_prefix = 'Validation' if validation else 'Train'
+        epoch_prefix = "Epoch" if epoch else "Iter"
         for k in ("linear_loss", "mel_loss", "total_loss"):
-            self.writer.add_scalar(scalar_prefix + '_' + k, np.mean(self.metrics[k]), epoch_num)
+            self.writer.add_scalar(scalar_prefix + epoch_prefix + '_' + k, np.mean(self.metrics[k]), epoch_num)
 
     def write_audio_to_tensorboard(self, exp_name, inputs, outputs, targets, epoch_num, validation=False):
         pass
