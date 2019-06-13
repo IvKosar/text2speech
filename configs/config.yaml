@@ -1,0 +1,34 @@
+project: "text2speech"
+experiment_name: "basic"
+
+data:
+  data_path: "../LJSpeech-1.1"
+  annotations_train: "metadata_train.csv"
+  annotations_val: "metadata_val"
+  output_path: "../tacotron_outputs"
+  min_seq_len: 0
+
+train:
+  epochs: 200
+  lr: 0.001
+  warmup_steps: 4000
+  save_step: 1000
+
+batch_size: 16
+eval_batch_size: 8
+text_cleaner: "english_cleaners"
+embedding_size: 256
+num_workers: 8
+r: 5
+
+audio:
+  sample_rate: 20000
+  frequency: 1025
+  mels_size: 80
+  frame_length: 50
+  frame_shift: 12.5
+  preemphasis: 0.97
+  min_dbs: -100
+  ref_dbs: 20
+  spectro_power: 1.5
+  griffin_lim_iters: 60
