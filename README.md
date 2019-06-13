@@ -1,0 +1,54 @@
+# Sequence translation: text-to-speech
+
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+
+## Stages of project:
+- [x] Find dataset
+- [x] Data pre-processing
+    - [x] Text pre-processing
+    - [x] Audio pre-processing
+- [x] Sequence model architecture
+    - [x] Choose state of the art architecture - **Tacotron**
+    - [x] Create architecture of the model from the paper
+- [ ] Training
+    - [ ] Implement train module
+    - [ ] Train model
+    - [ ] Add tensorboard
+- [ ] Evaluation
+    - [ ] Inference module
+    - [ ] Benchmarking
+
+## Model Architecture
+![tacotron architecture diagram](imgs/Tacotron.jpg)
+
+The model takes characters as input and outputs the corresponding raw spectrogram, which is then fed to the Griffin-Lim reconstruction algorithm to synthesize speech.
+
+### CBHG submodule
+![CBHG module](imgs/CBHG.png)
+
+CBHG  consists  of  a bank of 1-D convolutional filters,  followed by highway networks and bidirectional gated recurrent unit (GRU)  recurrent neural net (RNN). 
+__CBHG is a powerful module for extracting representations from sequences.__
+
+## Dependencies
+
+  - [![Anaconda-Server Badge](https://anaconda.org/anaconda/numpy/badges/version.svg)](https://anaconda.org/anaconda/numpy): `conda install numpy`
+  - [![Anaconda-Server Badge](https://anaconda.org/anaconda/scipy/badges/version.svg)](https://anaconda.org/anaconda/scipy): `conda install scipy`
+  - [![Anaconda-Server Badge](https://anaconda.org/pytorch/pytorch/badges/installer/conda.svg)](https://conda.anaconda.org/pytorch): `conda install pytorch torchvision -c pytorch`
+  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/tqdm/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge): `conda install -c conda-forge tqdm`
+  - [![PyPI version](https://badge.fury.io/py/tensorboardX.svg)](https://badge.fury.io/py/tensorboardX): `pip install tensorboardX`
+
+
+## Literature and references:
+- Tacotron: Towards End-to-End Speech Synthesis	[arXiv:1703.10135](https://arxiv.org/abs/1703.10135) [cs.CL]
+- [The LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/)
+- [Recurrent Neural Networks](https://d2l.ai/chapter_recurrent-neural-networks/index.html) @ [Dive into Deep Learning](https://d2l.ai/index.html) interactive book
+- [Text to Speech Deep Learning Architectures](http://www.erogol.com/text-speech-deep-learning-architectures/)
+- [Deep Learning for Audio](http://slazebni.cs.illinois.edu/spring17/lec26_audio.pdf) Y. Fan, M. Potok, C. Shroba
+- [Deep Learning for Text-to-Speech Synthesis, using the Merlin toolkit](http://www.speech.zone/courses/one-off/merlin-interspeech2017/)
+- [Babble-rnn: Generating speech from speech with LSTM networks](http://babble-rnn.consected.com/docs/babble-rnn-generating-speech-from-speech-post.html)
+- https://github.com/r9y9/tacotron_pytorch
+- https://github.com/keithito/tacotron
+- https://github.com/Kyubyong/tacotron
+- [The Centre for Speech Technology Research](http://www.cstr.ed.ac.uk/)
+- [Preparing Data for Training an HTS Voice](http://www.cs.columbia.edu/~ecooper/tts/data.html)
+- [awesome speech synthesis/recognition papers](http://rodrigo.ebrmx.com/github_/zzw922cn/awesome-speech-recognition-speech-synthesis-papers)
