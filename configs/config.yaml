@@ -6,7 +6,6 @@ data:
   annotations_train: "metadata_train.csv"
   annotations_val: "metadata_val"
   output_path: "../tacotron_outputs"
-  min_seq_len: 0
 
 train:
   epochs: 200
