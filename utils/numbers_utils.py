@@ -1,67 +1,21 @@
 import re
 
-_comma_number_re = re.compile(r'([0-9][0-9\,]+[0-9])')
+_comma_number_re = re.compile(r'([0-9][0-9,]+[0-9])')
 _decimal_number_re = re.compile(r'([0-9]+\.[0-9]+)')
-_pounds_re = re.compile(r'£([0-9\,]*[0-9]+)')
-_dollars_re = re.compile(r'\$([0-9\.\,]*[0-9]+)')
+_pounds_re = re.compile(r'£([0-9,]*[0-9]+)')
+_dollars_re = re.compile(r'\$([0-9.,]*[0-9]+)')
 _ordinal_re = re.compile(r'([0-9]+)(st|nd|rd|th)')
 _number_re = re.compile(r'[0-9]+')
 
-_units = [
-    '',
-    'one',
-    'two',
-    'three',
-    'four',
-    'five',
-    'six',
-    'seven',
-    'eight',
-    'nine',
-    'ten',
-    'eleven',
-    'twelve',
-    'thirteen',
-    'fourteen',
-    'fifteen',
-    'sixteen',
-    'seventeen',
-    'eighteen',
-    'nineteen'
-]
+_units = [''] + ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
+                 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
 
-_tens = [
-    '',
-    'ten',
-    'twenty',
-    'thirty',
-    'forty',
-    'fifty',
-    'sixty',
-    'seventy',
-    'eighty',
-    'ninety',
-]
+_tens = [''] + ['ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
 
-_digit_groups = [
-    '',
-    'thousand',
-    'million',
-    'billion',
-    'trillion',
-    'quadrillion',
-]
+_digit_groups = [''] + ['thousand', 'million', 'billion', 'trillion', 'quadrillion']
 
-_ordinal_suffixes = [
-    ('one', 'first'),
-    ('two', 'second'),
-    ('three', 'third'),
-    ('five', 'fifth'),
-    ('eight', 'eighth'),
-    ('nine', 'ninth'),
-    ('twelve', 'twelfth'),
-    ('ty', 'tieth'),
-]
+_ordinal_suffixes = [('one', 'first'), ('two', 'second'), ('three', 'third'), ('five', 'fifth'), ('eight', 'eighth'),
+                     ('nine', 'ninth'), ('twelve', 'twelfth'), ('ty', 'tieth')]
 
 
 def _remove_commas(m):
@@ -76,7 +30,7 @@ def _expand_dollars(m):
     match = m.group(1)
     parts = match.split('.')
     if len(parts) > 2:
-        return match + ' dollars'  # Unexpected format
+        return match + ' dollars'
     dollars = int(parts[0]) if parts[0] else 0
     cents = int(parts[1]) if len(parts) > 1 and parts[1] else 0
     if dollars and cents:
