@@ -9,6 +9,7 @@
 - [Model Architecture](#model_architecture)
 - [CBHG submodule](#cbhg-submodule)
 - [Dependencies](#dependencies)
+- [Usage](#usage)
 - [Literature and references](#literature-and-references)
 
 
@@ -44,15 +45,22 @@ The model takes characters as input and outputs the corresponding raw spectrogra
 CBHG  consists  of  a bank of 1-D convolutional filters,  followed by highway networks and bidirectional gated recurrent unit (GRU)  recurrent neural net (RNN). 
 __CBHG is a powerful module for extracting representations from sequences.__
 
+
+#### Model weights
+You can find model weights @ [link]().
+
 ## Dependencies
 
-You can install all required dependencies with: `pip install -r requirements.txt`
+You can install all required dependencies with: 
+```bash
+$ pip install -r requirements.txt
+```
 
 You can also install the latest packages manually with:
 
   - [![Anaconda-Server Badge](https://anaconda.org/anaconda/numpy/badges/version.svg)](https://anaconda.org/anaconda/numpy): `conda install numpy`
   - [![Anaconda-Server Badge](https://anaconda.org/anaconda/scipy/badges/version.svg)](https://anaconda.org/anaconda/scipy): `conda install scipy`
-  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/tqdm/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge): `conda install -c conda-forge tqdm`
+  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/tqdm/badges/version.svg)](https://anaconda.org/conda-forge/tqdm): `conda install -c conda-forge tqdm`
   - [![PyPI version](https://badge.fury.io/py/tensorboardX.svg)](https://badge.fury.io/py/tensorboardX): `pip install tensorboardX`
   - [![Anaconda-Server Badge](https://anaconda.org/pytorch/pytorch/badges/version.svg)](https://anaconda.org/pytorch/pytorch):  `conda install -c pytorch pytorch`
   - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/matplotlib/badges/version.svg)](https://anaconda.org/conda-forge/matplotlib): `conda install -c conda-forge matplotlib`
@@ -60,9 +68,40 @@ You can also install the latest packages manually with:
   - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/librosa/badges/version.svg)](https://anaconda.org/conda-forge/librosa): `conda install -c conda-forge librosa`
   - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/unidecode/badges/version.svg)](https://anaconda.org/conda-forge/unidecode): `conda install -c conda-forge unidecode`
   - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/yaml/badges/version.svg)](https://anaconda.org/conda-forge/yaml) : `conda install -c conda-forge yaml`
-  
-  
-  
+  - [![PyPI version](https://badge.fury.io/py/SoundFile.svg)](https://badge.fury.io/py/SoundFile): `pip install SoundFile`
+
+## Usage
+
+#### Training model
+```bash
+$ python train.py --config configs/config.yaml  
+```
+
+We have trained the model for 45k iterations.
+
+#### Inference
+To use the model we created jupyter notebook (_inference.ipynb_).
+
+Here is the example of usage:
+
+```python
+text0 = "It was a great day"
+wav, alignment, spectrogram = inference(text0)
+IPython.display.display(Audio(wav, rate=audio_configs["sample_rate"]))
+visualize_spectrogram(spectrogram, alignment)
+```
+
+The output would be generated audio.
+You can listen it in the ipynb notebook or [here](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/itwaagrda.wav?raw=true).
+
+![example](imgs/ex1.png)
+
+##### Other generated examples
+
+| `It was a great day` | `I love Machine Learning` | `My name is Pytorch and I live on cuda` | `I gonna take my horse to the old town road` |
+|-------|-------|-------|-------|
+| [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/itwaagrda.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/ilomale.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/mynaispyanilioncu.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/igotamyhototholtoro.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/ilomale.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/mynaispyanilioncu.wav?raw=true) | link4 | 
+
 ## Literature and references:
 - Tacotron: Towards End-to-End Speech Synthesis	[arXiv:1703.10135](https://arxiv.org/abs/1703.10135) [cs.CL]
 - [The LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/)
