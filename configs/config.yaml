@@ -4,7 +4,7 @@ experiment_name: "text2speech_tacotron_basic"
 data:
   data_path: "../LJSpeech-1.1"
   annotations_train: "metadata_train.csv"
-  annotations_val: "metadata_val"
+  annotations_val: "metadata_val.csv"
   output_path: "../tacotron_outputs"
 
 train:
@@ -32,4 +32,5 @@ audio:
   min_dbs: -100
   ref_dbs: 20
   spectro_power: 1.5
-  griffin_lim_iters: 60
+  griff_lim_iters: 60
+  outputs_per_step:

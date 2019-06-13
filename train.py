@@ -27,11 +27,13 @@ def prepare_directories():
 def train():
     metric_counter = MetricCounter(configs["experiment_name"])
 
-    train_dataset = TextSpeechDataset(data_configs["data_path"], data_configs["annotations_train"], audio_configs)
+    parameters = dict(audio_configs)
+    parameters["text_cleaner"] = configs["text_cleaner"]
+    train_dataset = TextSpeechDataset(data_configs["data_path"], data_configs["annotations_train"], parameters)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=train_dataset.collate_fn,
                               num_workers=num_workers, drop_last=False, pin_memory=True)
 
-    val_dataset = TextSpeechDataset(data_configs["data_path"], data_configs["annotations_val"], audio_configs)
+    val_dataset = TextSpeechDataset(data_configs["data_path"], data_configs["annotations_val"], parameters)
     val_loader = DataLoader(val_dataset, batch_size=eval_batch_size, num_workers=num_workers,
                             collate_fn=val_dataset.collate_fn, drop_last=False, pin_memory=True)
 
@@ -129,7 +131,7 @@ if __name__ == "__main__":
     parser.add_argument("--resume", type=str, help="Path to weights to resume from")
     args = parser.parse_args()
 
-    with open(args["config"]) as f:
+    with open(args.config) as f:
         configs = yaml.load(f)
 
     batch_size = configs.pop("batch_size")
@@ -140,7 +142,7 @@ if __name__ == "__main__":
     train_configs = configs.pop("train")
 
     output_path = data_configs["output_path"]
-    LOG_DIR = os.path.join(output_path, configs.pop("experiment_name"), "logs")
-    WEIGHTS_SAVE_PATH = os.path.join(output_path, configs.pop("experiment_name"), "weights")
+    LOG_DIR = os.path.join(output_path, configs["experiment_name"], "logs")
+    WEIGHTS_SAVE_PATH = os.path.join(output_path, configs["experiment_name"], "weights")
 
     train()
