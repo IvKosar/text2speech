@@ -26,7 +26,7 @@ def prepare_directories():
 
 def train():
     prepare_directories()
-    metric_counter = MetricCounter(exp_name=configs["experiment_name"])
+    metric_counter = MetricCounter(exp_name=os.path.join(LOG_DIR, configs["experiment_name"]))
 
     parameters = dict(audio_configs)
     parameters["text_cleaner"] = configs["text_cleaner"]
@@ -102,9 +102,13 @@ def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_
                       + 0.5 * criterion(linear_output[:, :, :n_priority_freq],
                                         linears[:, :, :n_priority_freq],
                                         mel_lengths)
-        loss = mel_loss + linear_loss
-        loss.backward()
+        total_loss = mel_loss + linear_loss
+        total_loss.backward()
         optimizer.step()
+
+        metric_counter.add_losses(linear_loss.item(), mel_loss.item(), total_loss.item())
+        metric_counter.write_to_tensorboard(current_step)
+
         num_iter += 1
 
 
