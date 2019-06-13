@@ -3,7 +3,7 @@ experiment_name: "text2speech_tacotron_basic"
 
 data:
   data_path: "../LJSpeech-1.1"
-  annotations_train: "metadata_val.csv"
+  annotations_train: "metadata_train.csv"
   annotations_val: "metadata_val.csv"
   output_path: "../tacotron_result"
 
