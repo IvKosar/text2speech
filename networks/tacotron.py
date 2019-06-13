@@ -19,7 +19,7 @@ class Tacotron(Module):
         self.last_linear = Linear(in_features=(mel_dim * 2), out_features=linear_dim)
 
     def forward(self, characters, mel_specs=None):
-        inputs = self.embedding(inputs=characters)
+        inputs = self.embedding(input=characters)
         encoder_outputs = self.encoder(inputs=inputs)
         mel_outputs, alignments = self.decoder(inputs=encoder_outputs, memory=mel_specs)
         linear_outputs = self.last_linear(self.postnet(mel_outputs.view(characters.size(0), -1, self.mel_dim)))

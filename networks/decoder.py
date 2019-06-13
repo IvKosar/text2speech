@@ -30,11 +30,11 @@ class Decoder(Module):
                 memory = memory.view(B, memory.size(1) // self.r, -1)
             T_decoder = memory.size(1)
 
-        initial_memory = Variable(tensor=inputs.data.new(B, self.memory_dim * self.r).zero_())
+        initial_memory = inputs.data.new(B, self.memory_dim * self.r).zero_()
 
-        attention_rnn_hidden = Variable(tensor=inputs.data.new(B, 256).zero_())
-        decoder_rnn_hiddens = [Variable(tensor=inputs.data.new(B, 256).zero_()) for _ in range(len(self.decoder_rnns))]
-        current_context_vec = Variable(tensor=inputs.data.new(B, 256).zero_())
+        attention_rnn_hidden = inputs.data.new(B, 256).zero_()
+        decoder_rnn_hiddens = [inputs.data.new(B, 256).zero_() for _ in range(len(self.decoder_rnns))]
+        current_context_vec = inputs.data.new(B, 256).zero_()
 
         if memory is not None:
             memory = memory.transpose(0, 1)
