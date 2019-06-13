@@ -4,12 +4,12 @@
 
 ### Content
 
-- [Stages of project](#stages-of-project)
+- [Stages of project](#stages-of-project
+- [Usage](#usage)
 - [Dataset](#dataset)
-- [Model Architecture](#model_architecture)
+- [Model Architecture](#model-architecture)
 - [CBHG submodule](#cbhg-submodule)
 - [Dependencies](#dependencies)
-- [Usage](#usage)
 - [Literature and references](#literature-and-references)
 
 
