@@ -5,7 +5,8 @@ import torch
 from torch.utils.data import Dataset
 from utils.audio_processor import AudioProcessor
 from utils.audio_utils import load_wav
-from utils.data_utils import pad_data, prepare_tensor, prepare_stop_target
+from utils.data_utils import pad_data, prepare_tensor
+from utils.text_utils import text_to_sequence
 
 
 class TextSpeechDataset(Dataset):
