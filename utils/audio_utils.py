@@ -1,15 +1,17 @@
-import numpy as np
 import librosa
+import numpy as np
 
 
 def save_wav(wav, path, sample_rate):
     wav *= 32767 / max(0.01, np.max(np.abs(wav)))
-    librosa.output.write_wav(path, wav.astype(np.float), sample_rate)
+    # Output a time series as a .wav file
+    librosa.output.write_wav(path=path, y=wav.astype(np.float), sr=sample_rate, norm=False)
 
 
 def load_wav(filename, sample_rate):
-    audio = librosa.core.load(filename, sr=sample_rate)
-    return np.asarray(audio[0], dtype=np.float32)
+    # Load an audio file as a floating point time series
+    audio = librosa.core.load(path=filename, sr=sample_rate)
+    return np.asarray(a=audio[0], dtype=np.float32)
 
 
 def amplitude_to_dbs(amplitude):
@@ -21,31 +23,31 @@ def dbs_to_amplitude(dbs):
 
 
 def normalize_spectrogram(dbs, min_dbs):
-    return np.clip((dbs - min_dbs) / -min_dbs, 0, 1)
+    return np.clip(a=((dbs - min_dbs) / -min_dbs), a_min=0, a_max=1)
 
 
 def denormalize_spectrogram(dbs, min_dbs):
-    return (np.clip(dbs, 0, 1) * -min_dbs) + min_dbs
+    return (np.clip(a=dbs, a_min=0, a_max=1) * -min_dbs) + min_dbs
 
 
 def griffin_lim(spectrogram, griffin_lim_iters, n_fft, hop_length, win_length):
-    '''librosa implementation of Griffin-Lim
-    Based on https://github.com/librosa/librosa/issues/434
-    '''
     angles = np.exp(2j * np.pi * np.random.rand(*spectrogram.shape))
     spectrogram_complex = np.abs(spectrogram).astype(np.complex)
-    y = librosa.istft(spectrogram_complex * angles, hop_length=hop_length, win_length=win_length)
+    # Inverse short-time Fourier transform (ISTFT)
+    y = librosa.core.istft(stft_matrix=(spectrogram_complex * angles), hop_length=hop_length, win_length=win_length,
+                           window='hann', center=True)
     for i in range(griffin_lim_iters):
-        angles = np.exp(1j * np.angle(librosa.stft(y=y, n_fft=n_fft, hop_length=hop_length, win_length=win_length)))
-        y = librosa.istft(spectrogram_complex * angles, hop_length=hop_length, win_length=win_length)
+        angles = np.exp(
+            1j * np.angle(librosa.core.stft(y=y, n_fft=n_fft, hop_length=hop_length, win_length=win_length)))
+        y = librosa.core.istft(stft_matrix=(spectrogram_complex * angles), hop_length=hop_length, win_length=win_length,
+                               window='hann', center=True)
     return y
 
 
 def find_endpoint(wav, sample_rate, threshold_db=-40, min_silence_sec=0.8):
     window_length = int(sample_rate * min_silence_sec)
     hop_length = int(window_length / 4)
-    threshold = dbs_to_amplitude(threshold_db)
     for x in range(hop_length, len(wav) - window_length, hop_length):
-        if np.max(wav[x:x + window_length]) < threshold:
+        if np.max(wav[x:x + window_length]) < dbs_to_amplitude(dbs=threshold_db):
             return x + hop_length
     return len(wav)
