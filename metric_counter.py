@@ -8,7 +8,7 @@ WINDOW_SIZE = 100
 
 class MetricCounter:
     def __init__(self, exp_name):
-        self.writer = SummaryWriter(log_dir=exp_name)
+        self.writer = SummaryWriter(logdir=exp_name)
         self.metrics = defaultdict(list)
         self.best_metric = float('inf')
 
