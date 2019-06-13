@@ -43,6 +43,9 @@ def train():
                      audio_configs["mels_size"],
                      configs.pop("r"))
 
+    if use_cuda:
+        model = torch.nn.DataParallel(model.to("cuda"))
+
     optimizer = optim.Adam(model.parameters(), lr=train_configs["lr"])
     criterion = L1LossMasked()
 
