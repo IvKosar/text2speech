@@ -29,6 +29,42 @@
     - [x] Inference module
     - [ ] Benchmarking
 
+
+## Usage
+
+#### Training model
+```bash
+$ python train.py --config configs/config.yaml  
+```
+
+We have trained the model for 45k iterations.
+
+#### Inference
+To use the model we created jupyter notebook (_inference.ipynb_).
+
+Here is the example of usage:
+
+```python
+text0 = "It was a great day"
+wav, alignment, spectrogram = inference(text0)
+IPython.display.display(Audio(wav, rate=audio_configs["sample_rate"]))
+visualize_spectrogram(spectrogram, alignment)
+```
+
+The output would be generated audio.
+You can listen it in the ipynb notebook or [here](http://marianpetruk.github.com/projects/text2speech/generated/itwaagrda.wav).
+
+![example](imgs/ex1.png)
+
+##### Other generated examples
+
+| `It was a great day` | `I love Machine Learning` | `My name is Pytorch and I live on cuda` | `I gonna take my horse to the old town road` |
+|-------|-------|-------|-------|
+| [link](http://marianpetruk.github.com/projects/text2speech/generated/itwaagrda.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/ilomale.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/mynaispyanilioncu.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/igotamyhototholtoro.wav) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/ilomale.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/mynaispyanilioncu.wav?raw=true) | link4 | 
+
+
+
+
 ## Dataset
 For our project we choose to use [LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/).
 It consists of 13100 audio clips of a single speaker with transcriptions to every clip.
@@ -69,38 +105,6 @@ You can also install the latest packages manually with:
   - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/unidecode/badges/version.svg)](https://anaconda.org/conda-forge/unidecode): `conda install -c conda-forge unidecode`
   - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/yaml/badges/version.svg)](https://anaconda.org/conda-forge/yaml) : `conda install -c conda-forge yaml`
   - [![PyPI version](https://badge.fury.io/py/SoundFile.svg)](https://badge.fury.io/py/SoundFile): `pip install SoundFile`
-
-## Usage
-
-#### Training model
-```bash
-$ python train.py --config configs/config.yaml  
-```
-
-We have trained the model for 45k iterations.
-
-#### Inference
-To use the model we created jupyter notebook (_inference.ipynb_).
-
-Here is the example of usage:
-
-```python
-text0 = "It was a great day"
-wav, alignment, spectrogram = inference(text0)
-IPython.display.display(Audio(wav, rate=audio_configs["sample_rate"]))
-visualize_spectrogram(spectrogram, alignment)
-```
-
-The output would be generated audio.
-You can listen it in the ipynb notebook or [here](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/itwaagrda.wav?raw=true).
-
-![example](imgs/ex1.png)
-
-##### Other generated examples
-
-| `It was a great day` | `I love Machine Learning` | `My name is Pytorch and I live on cuda` | `I gonna take my horse to the old town road` |
-|-------|-------|-------|-------|
-| [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/itwaagrda.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/ilomale.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/mynaispyanilioncu.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/igotamyhototholtoro.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/ilomale.wav?raw=true) | [link](https://github.com/marianpetruk/marianpetruk.github.io/blob/master/projects/text2speech/generated/mynaispyanilioncu.wav?raw=true) | link4 | 
 
 ## Literature and references:
 - Tacotron: Towards End-to-End Speech Synthesis	[arXiv:1703.10135](https://arxiv.org/abs/1703.10135) [cs.CL]
