@@ -1,5 +1,4 @@
 from torch import stack, cat
-from torch.autograd import Variable
 from torch.nn import Module, ModuleList, GRUCell, Linear
 
 from modules.attention import AttentionRNN

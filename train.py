@@ -25,28 +25,31 @@ def prepare_directories():
 
 
 def train():
-    metric_counter = MetricCounter(configs["experiment_name"])
+    metric_counter = MetricCounter(exp_name=configs["experiment_name"])
 
     parameters = dict(audio_configs)
     parameters["text_cleaner"] = configs["text_cleaner"]
     parameters["outputs_per_step"] = configs["r"]
-    train_dataset = TextSpeechDataset(data_configs["data_path"], data_configs["annotations_train"], parameters)
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=train_dataset.collate_fn,
+    train_dataset = TextSpeechDataset(root_dir=data_configs["data_path"],
+                                      annotations_file=data_configs["annotations_train"], parameters=parameters)
+    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True,
+                              collate_fn=train_dataset.collate_fn,
                               num_workers=num_workers, drop_last=False, pin_memory=True)
 
-    val_dataset = TextSpeechDataset(data_configs["data_path"], data_configs["annotations_val"], parameters)
-    val_loader = DataLoader(val_dataset, batch_size=eval_batch_size, num_workers=num_workers,
+    val_dataset = TextSpeechDataset(root_dir=data_configs["data_path"],
+                                    annotations_file=data_configs["annotations_val"], parameters=parameters)
+    val_loader = DataLoader(dataset=val_dataset, batch_size=eval_batch_size, num_workers=num_workers,
                             collate_fn=val_dataset.collate_fn, drop_last=False, pin_memory=True)
 
-    model = Tacotron(configs.pop("embedding_size"),
-                     audio_configs["frequency"],
-                     audio_configs["mels_size"],
-                     configs.pop("r"))
+    model = Tacotron(embedding_dim=configs.pop("embedding_size"),
+                     linear_dim=audio_configs["frequency"],
+                     mel_dim=audio_configs["mels_size"],
+                     r=configs.pop("r"))
 
     if use_cuda:
         model = torch.nn.DataParallel(model.to("cuda"))
 
-    optimizer = optim.Adam(model.parameters(), lr=train_configs["lr"])
+    optimizer = optim.Adam(params=model.parameters(), lr=train_configs["lr"])
     criterion = L1LossMasked()
 
     if args.resume:
@@ -70,7 +73,8 @@ def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_
     num_iter = 0
     for data in tqdm(dataloader):
         current_step = num_iter + epoch * len(dataloader) + 1
-        current_lr = lr_decay(train_configs["lr"], current_step, train_configs["warmup_steps"])
+        current_lr = lr_decay(init_lr=train_configs["lr"], global_step=current_step,
+                              warmup_steps=train_configs["warmup_steps"])
         for params_group in optimizer.param_groups:
             params_group['lr'] = current_lr
 
@@ -91,8 +95,8 @@ def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_
         mel_output, linear_output, alignments = model.forward(texts, mels)
 
         # loss computation
-        mel_loss = criterion(mel_output, mels, mel_lengths)
-        linear_loss = 0.5 * criterion(linear_output, linears, mel_lengths) \
+        mel_loss = criterion(inputs=mel_output, targets=mels, lengths=mel_lengths)
+        linear_loss = 0.5 * criterion(inputs=linear_output, targets=linears, lengths=mel_lengths) \
                       + 0.5 * criterion(linear_output[:, :, :n_priority_freq],
                                         linears[:, :, :n_priority_freq],
                                         mel_lengths)
@@ -116,11 +120,11 @@ def run_validate(model, dataloader, criterion, metric_counter, n_priority_freq):
                 mels = mels.cuda()
                 mel_lengths = mel_lengths.cuda()
 
-            mel_outputs, linear_outputs, alignments = model.forward(texts, mels)
-            linear_loss = 0.5 * criterion(linear_outputs, linears, mel_lengths) \
-                          + 0.5 * criterion(linear_outputs[:, :, :n_priority_freq],
-                                            linears[:, :, :n_priority_freq], mel_lengths)
-            mel_loss = criterion(mel_outputs, mels, mel_lengths)
+            mel_outputs, linear_outputs, alignments = model.forward(characters=texts, mel_specs=mels)
+            linear_loss = 0.5 * criterion(inputs=linear_outputs, targets=linears, lengths=mel_lengths) \
+                          + 0.5 * criterion(inputs=linear_outputs[:, :, :n_priority_freq],
+                                            targets=linears[:, :, :n_priority_freq], lengths=mel_lengths)
+            mel_loss = criterion(inputs=mel_outputs, targets=mels, lengths=mel_lengths)
 
             avg_linear_loss += linear_loss.item()
             avg_mel_loss += mel_loss.item()
