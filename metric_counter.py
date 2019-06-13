@@ -8,7 +8,7 @@ WINDOW_SIZE = 100
 
 class MetricCounter:
     def __init__(self, exp_name):
-        self.writer = SummaryWriter(exp_name)
+        self.writer = SummaryWriter(log_dir=exp_name)
         self.metrics = defaultdict(list)
         self.best_metric = float('inf')
 
@@ -29,7 +29,8 @@ class MetricCounter:
         scalar_prefix = 'Validation' if validation else 'Train'
         epoch_prefix = "Epoch" if epoch else "Iter"
         for k in ("linear_loss", "mel_loss", "total_loss"):
-            self.writer.add_scalar(scalar_prefix + epoch_prefix + '_' + k, np.mean(self.metrics[k]), epoch_num)
+            self.writer.add_scalar(tag=(scalar_prefix + epoch_prefix + '_' + k), scalar_value=np.mean(self.metrics[k]),
+                                   global_step=epoch_num)
 
     def write_audio_to_tensorboard(self, exp_name, inputs, outputs, targets, epoch_num, validation=False):
         pass
@@ -39,4 +40,5 @@ class MetricCounter:
         if cur_metric < self.best_metric:
             self.best_metric = cur_metric
             return True
-        return False
+        else:
+            return False
