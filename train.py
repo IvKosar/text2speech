@@ -67,7 +67,8 @@ def train():
 
 
 def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_priority_freq):
-    for num_iter, data in enumerate(dataloader):
+    num_iter = 0
+    for data in tqdm(dataloader):
         current_step = num_iter + epoch * len(dataloader) + 1
         current_lr = lr_decay(train_configs["lr"], current_step, train_configs["warmup_steps"])
         for params_group in optimizer.param_groups:
@@ -98,6 +99,7 @@ def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_
         loss = mel_loss + linear_loss
         loss.backward()
         optimizer.step()
+        num_iter += 1
 
 
 def run_validate(model, dataloader, criterion, metric_counter, n_priority_freq):
