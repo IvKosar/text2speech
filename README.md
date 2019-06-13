@@ -2,6 +2,14 @@
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
 
+### Content
+
+- [Stages of project](#stages-of-project)
+- [Dataset](#dataset)
+- [Model architecture](#model_architecture)
+- [CBHG submodule](#cbhg-submodule)
+
+
 ## Stages of project:
 - [x] Find dataset
 - [x] Data pre-processing
@@ -10,13 +18,18 @@
 - [x] Sequence model architecture
     - [x] Choose state of the art architecture - **Tacotron**
     - [x] Create architecture of the model from the paper
-- [ ] Training
-    - [ ] Implement train module
-    - [ ] Train model
+- [x] Training
+    - [x] Implement train module
+    - [x] Train model
     - [ ] Add tensorboard
 - [ ] Evaluation
-    - [ ] Inference module
+    - [x] Inference module
     - [ ] Benchmarking
+
+## Dataset
+For our project we choose to use [LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/).
+It consists of 13100 audio clips of a single speaker with transcriptions to every clip.
+Total number of words is 225715 and total length of all audio is almost 24 hours.
 
 ## Model Architecture
 ![tacotron architecture diagram](imgs/Tacotron.jpg)
@@ -31,13 +44,23 @@ __CBHG is a powerful module for extracting representations from sequences.__
 
 ## Dependencies
 
+You can install all required dependencies with: `pip install -r requirements.txt`
+
+You can also install the latest packages manually with:
+
   - [![Anaconda-Server Badge](https://anaconda.org/anaconda/numpy/badges/version.svg)](https://anaconda.org/anaconda/numpy): `conda install numpy`
   - [![Anaconda-Server Badge](https://anaconda.org/anaconda/scipy/badges/version.svg)](https://anaconda.org/anaconda/scipy): `conda install scipy`
-  - [![Anaconda-Server Badge](https://anaconda.org/pytorch/pytorch/badges/installer/conda.svg)](https://conda.anaconda.org/pytorch): `conda install pytorch torchvision -c pytorch`
   - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/tqdm/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge): `conda install -c conda-forge tqdm`
   - [![PyPI version](https://badge.fury.io/py/tensorboardX.svg)](https://badge.fury.io/py/tensorboardX): `pip install tensorboardX`
-
-
+  - [![Anaconda-Server Badge](https://anaconda.org/pytorch/pytorch/badges/version.svg)](https://anaconda.org/pytorch/pytorch):  `conda install -c pytorch pytorch`
+  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/matplotlib/badges/version.svg)](https://anaconda.org/conda-forge/matplotlib): `conda install -c conda-forge matplotlib`
+  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/pandas/badges/version.svg)](https://anaconda.org/conda-forge/pandas): ` conda install -c conda-forge pandas`
+  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/librosa/badges/version.svg)](https://anaconda.org/conda-forge/librosa): `conda install -c conda-forge librosa`
+  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/unidecode/badges/version.svg)](https://anaconda.org/conda-forge/unidecode): `conda install -c conda-forge unidecode`
+  - [![Anaconda-Server Badge](https://anaconda.org/conda-forge/yaml/badges/version.svg)](https://anaconda.org/conda-forge/yaml) : `conda install -c conda-forge yaml`
+  
+  
+  
 ## Literature and references:
 - Tacotron: Towards End-to-End Speech Synthesis	[arXiv:1703.10135](https://arxiv.org/abs/1703.10135) [cs.CL]
 - [The LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/)
@@ -48,6 +71,7 @@ __CBHG is a powerful module for extracting representations from sequences.__
 - [Babble-rnn: Generating speech from speech with LSTM networks](http://babble-rnn.consected.com/docs/babble-rnn-generating-speech-from-speech-post.html)
 - https://github.com/r9y9/tacotron_pytorch
 - https://github.com/keithito/tacotron
+- https://github.com/mozilla/TTS
 - https://github.com/Kyubyong/tacotron
 - [The Centre for Speech Technology Research](http://www.cstr.ed.ac.uk/)
 - [Preparing Data for Training an HTS Voice](http://www.cs.columbia.edu/~ecooper/tts/data.html)
