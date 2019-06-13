@@ -5,12 +5,14 @@ import yaml
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
+from tqdm import tqdm
 
 from dataset import TextSpeechDataset
 from networks.tacotron import Tacotron
 from loss import L1LossMasked
 from metric_counter import MetricCounter
 
+use_cuda = torch.cuda.is_available()
 
 def prepare_directories():
     if not os.path.exists(output_path):
@@ -58,8 +60,24 @@ def run_epoch(dataloader, optimizer, criterion, metric_counter):
     pass
 
 
-def run_validate(dataloader, optimizer, criterion, metric_counter):
-    pass
+def run_validate(model, dataloader, optimizer, criterion, metric_counter, n_priority_freq):
+    model = model.eval()
+    iter = 0
+    for data in tqdm(dataloader):
+        with torch.no_grad():
+            texts, linears, mels, mel_lengths = data
+            if use_cuda:
+                texts = texts.cuda()
+                linears = linears.cuda()
+                mels = mels.cuda()
+                mel_lengths = mel_lengths.cuda()
+
+            mel_outputs, linear_outputs, alignments = model.forward(texts, mels)
+            linear_loss = 0.5 * criterion(linear_outputs, linears, mel_lengths) \
+                          + 0.5 * criterion(linear_outputs[:, :, :n_priority_freq],
+                                            linears[:, :, :n_priority_freq], mel_lengths)
+            mel_loss = criterion(mel_outputs, mels, mel_lengths)
+            total_loss = linear_loss + mel_loss
 
 
 if __name__ == "__main__":
