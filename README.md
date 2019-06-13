@@ -4,7 +4,7 @@
 
 ### Content
 
-- [Stages of project](#stages-of-project
+- [Stages of project](#stages-of-project)
 - [Usage](#usage)
 - [Dataset](#dataset)
 - [Model Architecture](#model-architecture)
@@ -83,7 +83,7 @@ __CBHG is a powerful module for extracting representations from sequences.__
 
 
 #### Model weights
-You can find model weights @ [link]().
+You can find model weights @ [link](https://drive.google.com/file/d/1ioRZOR1vD-qPpDIoA9Mwi4hZ7w3HFGuW/view?usp=sharing).
 
 ## Dependencies
 
