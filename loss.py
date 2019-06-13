@@ -1,5 +1,5 @@
 import torch
-from torch import functional as F
+from torch.nn import functional as F
 
 
 class L1LossMasked():
@@ -7,10 +7,10 @@ class L1LossMasked():
         inputs = inputs.view(-1, inputs.shape[-1])
         targets_flat = targets.view(-1, targets.shape[-1])
 
-        losses_flat = F.l1_loss(inputs, targets_flat, size_average=False, reduce=False)
+        losses_flat = F.l1_loss(inputs=inputs, target=targets_flat, size_average=False, reduce=False)
         losses = losses_flat.view(*targets.size())
         # mask: (batch, max_len, 1)
-        mask = sequence_mask(lengths, targets.size(1)).unsqueeze(2)
+        mask = sequence_mask(sequence_length=lengths, max_len=targets.size(1)).unsqueeze(2)
         losses *= mask.float()
         return losses.sum() / lengths.float().sum() * targets.shape[2]
 
@@ -18,7 +18,7 @@ class L1LossMasked():
 def sequence_mask(sequence_length, max_len):
     with torch.no_grad():
         batch_size = sequence_length.size(0)
-        seq_range = torch.arange(0, max_len).long()
+        seq_range = torch.arange(start=0, end=max_len).long()
         seq_range_expand = seq_range.unsqueeze(0).expand(batch_size, max_len)
         if sequence_length.is_cuda:
             seq_range_expand = seq_range_expand.cuda()
