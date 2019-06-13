@@ -71,6 +71,7 @@ def train():
 
 
 def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_priority_freq):
+    model = model.train()
     num_iter = 0
     for data in tqdm(dataloader):
         current_step = num_iter + epoch * len(dataloader) + 1
