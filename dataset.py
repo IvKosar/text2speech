@@ -16,7 +16,7 @@ class TextSpeechDataset(Dataset):
         self.root_dir = root_dir
         self.annotations = pd.read_csv(os.path.join(root_dir, annotations_file), sep="|", header=None)
         self.cleaners = parameters["text_cleaner"]
-        # self.outputs_per_step = parameters["outputs_per_step"]
+        self.outputs_per_step = parameters["outputs_per_step"]
         self.sample_rate = parameters["sample_rate"]
 
         self.ap = AudioProcessor(sample_rate=self.sample_rate, preemphasis=parameters["preemphasis"],

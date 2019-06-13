@@ -29,6 +29,7 @@ def train():
 
     parameters = dict(audio_configs)
     parameters["text_cleaner"] = configs["text_cleaner"]
+    parameters["outputs_per_step"] = configs["r"]
     train_dataset = TextSpeechDataset(data_configs["data_path"], data_configs["annotations_train"], parameters)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, collate_fn=train_dataset.collate_fn,
                               num_workers=num_workers, drop_last=False, pin_memory=True)
@@ -48,7 +49,7 @@ def train():
     if args.resume:
         model.load_state_dict(torch.load(args.resume))
 
-    n_priority_freq = int(3000 / (configs["audio"]["sample_rate"] * 0.5) * configs["audio"]["frequency"])
+    n_priority_freq = int(3000 / (audio_configs["sample_rate"] * 0.5) * audio_configs["frequency"])
     for epoch in range(train_configs["epochs"]):
         run_epoch(model, train_loader, optimizer, criterion, metric_counter, epoch, n_priority_freq)
         run_validate(model, val_loader, criterion, metric_counter, n_priority_freq)
@@ -65,7 +66,7 @@ def train():
 def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_priority_freq):
     for num_iter, data in enumerate(dataloader):
         current_step = num_iter + epoch * len(dataloader) + 1
-        current_lr = lr_decay(configs["train"]["lr"], current_step, configs["train"]["warmup_steps"])
+        current_lr = lr_decay(train_configs["lr"], current_step, train_configs["warmup_steps"])
         for params_group in optimizer.param_groups:
             params_group['lr'] = current_lr
 
@@ -132,7 +133,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     with open(args.config) as f:
-        configs = yaml.load(f)
+        configs = yaml.load(f, Loader=yaml.FullLoader)
 
     batch_size = configs.pop("batch_size")
     eval_batch_size = configs.pop("eval_batch_size")
