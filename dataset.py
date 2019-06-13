@@ -62,13 +62,9 @@ class TextSpeechDataset(Dataset):
         linears = linears.transpose(0, 2, 1)
         mels = mels.transpose(0, 2, 1)
 
-        stop_targets = list(map(lambda mel_len: np.zeros(mel_len - 1, dtype=np.float32), mel_lengths))
-        stop_targets = prepare_stop_target(stop_targets, self.outputs_per_step)
-
         texts = torch.LongTensor(texts)
         linears = torch.FloatTensor(linears)
         mels = torch.FloatTensor(mels)
         mel_lengths = torch.LongTensor(mel_lengths)
-        stop_targets = torch.FloatTensor(stop_targets)
 
-        return texts, linears, mels, mel_lengths, stop_targets
+        return texts, linears, mels, mel_lengths

@@ -1,5 +1,5 @@
 project: "text2speech"
-experiment_name: "basic"
+experiment_name: "text2speech_tacotron_basic"
 
 data:
   data_path: "../LJSpeech-1.1"
