@@ -1,6 +1,8 @@
 from torch.nn import Module
-from modules.prenet import Prenet
+
 from modules.cbhg import CBHG
+from modules.prenet import Prenet
+
 
 class Encoder(Module):
     def __init__(self, in_features):
@@ -11,4 +13,3 @@ class Encoder(Module):
     def forward(self, inputs):
         inputs = self.prenet(inputs)
         return self.cbhg(inputs)
-

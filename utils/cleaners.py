@@ -1,7 +1,8 @@
 import re
-from unidecode import unidecode
-from utils.numbers_utils import normalize_numbers
 
+from unidecode import unidecode
+
+from utils.numbers_utils import normalize_numbers
 
 # List of (regular expression, replacement) pairs for abbreviations:
 _abbreviations = [(re.compile('\\b%s\\.' % x[0], re.IGNORECASE), x[1]) for x in [

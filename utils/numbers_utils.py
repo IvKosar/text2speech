@@ -49,10 +49,10 @@ def _expand_dollars(m):
 
 def _standard_number_to_words(n, digit_group):
     parts = []
-    if n >= 1000:
+    if n >= int(1e3):
         # Format next higher digit group.
-        parts.append(_standard_number_to_words(n // 1000, digit_group + 1))
-        n = n % 1000
+        parts.append(_standard_number_to_words(n // int(1e3), digit_group + 1))
+        n = n % int(1e3)
 
     if n >= 100:
         parts.append('%s hundred' % _units[n // 100])
@@ -68,11 +68,11 @@ def _standard_number_to_words(n, digit_group):
 
 def _number_to_words(n):
     # Handle special cases first, then go to the standard case:
-    if n >= 1000000000000000000:
+    if n >= int(1e18):
         return str(n)  # Too large, just return the digits
     elif n == 0:
         return 'zero'
-    elif n % 100 == 0 and n % 1000 != 0 and n < 3000:
+    elif n % 100 == 0 and n % int(1e3) != 0 and n < int(3e3):
         return _standard_number_to_words(n // 100, 0) + ' hundred'
     else:
         return _standard_number_to_words(n, 0)

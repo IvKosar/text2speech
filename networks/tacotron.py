@@ -1,8 +1,10 @@
 from torch.nn import Module, Embedding, Linear
-from utils.text_utils import symbols
-from networks.encoder import Encoder
-from networks.decoder import Decoder
+
 from modules.cbhg import CBHG
+from networks.decoder import Decoder
+from networks.encoder import Encoder
+from utils.text_utils import symbols
+
 
 class Tacotron(Module):
     def __init__(self, embedding_dim=256, linear_dim=1025, mel_dim=80, r=5, padding_idx=None):
@@ -12,7 +14,8 @@ class Tacotron(Module):
         self.embedding.weight.data.normal_(mean=0, std=0.3)
         self.encoder = Encoder(in_features=embedding_dim)
         self.decoder = Decoder(in_features=256, memory_dim=mel_dim, r=r)
-        self.postnet = CBHG(sample_size=mel_dim, conv_bank_max_filter_size=8, conv_projections_channel_size=[256, mel_dim], num_highways=4)
+        self.postnet = CBHG(sample_size=mel_dim, conv_bank_max_filter_size=8,
+                            conv_projections_channel_size=[256, mel_dim], num_highways=4)
         self.last_linear = Linear(in_features=(mel_dim * 2), out_features=linear_dim)
 
     def forward(self, characters, mel_specs=None):
