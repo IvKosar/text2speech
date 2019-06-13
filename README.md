@@ -25,9 +25,8 @@
     - [x] Implement train module
     - [x] Train model
     - [ ] Add tensorboard
-- [ ] Evaluation
+- [x] Evaluation
     - [x] Inference module
-    - [ ] Benchmarking
 
 
 ## Usage
@@ -51,8 +50,7 @@ IPython.display.display(Audio(wav, rate=audio_configs["sample_rate"]))
 visualize_spectrogram(spectrogram, alignment)
 ```
 
-The output would be generated audio.
-You can listen it in the ipynb notebook or [here](http://marianpetruk.github.com/projects/text2speech/generated/itwaagrda.wav).
+The output is generated audio. It has taken ~2 seconds for generation on GPU GeForce GTX 1060. You can listen to it in the [ipynb](inference.ipynb) notebook or [here](http://marianpetruk.github.com/projects/text2speech/generated/itwaagrda.wav).
 
 ![example](imgs/ex1.png)
 
