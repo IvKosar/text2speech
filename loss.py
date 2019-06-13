@@ -7,7 +7,7 @@ class L1LossMasked():
         inputs = inputs.view(-1, inputs.shape[-1])
         targets_flat = targets.view(-1, targets.shape[-1])
 
-        losses_flat = F.l1_loss(inputs=inputs, target=targets_flat, size_average=False, reduce=False)
+        losses_flat = F.l1_loss(inputs=inputs, target=targets_flat, reduction=None)
         losses = losses_flat.view(*targets.size())
         # mask: (batch, max_len, 1)
         mask = sequence_mask(sequence_length=lengths, max_len=targets.size(1)).unsqueeze(2)
