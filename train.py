@@ -1,16 +1,17 @@
-import os
-import logging
 import argparse
-import yaml
+import logging
+import os
+
 import torch
-from torch.utils.data import DataLoader
+import yaml
 from torch import optim
+from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from dataset import TextSpeechDataset
-from networks.tacotron import Tacotron
 from loss import L1LossMasked
 from metric_counter import MetricCounter
+from networks.tacotron import Tacotron
 from utils.utilities import lr_decay
 
 use_cuda = torch.cuda.is_available()

@@ -1,6 +1,5 @@
-import logging
-import torch
 from collections import defaultdict
+
 import numpy as np
 from tensorboardX import SummaryWriter
 
