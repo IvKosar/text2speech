@@ -23,8 +23,8 @@
     - [x] Create architecture of the model from the paper
 - [x] Training
     - [x] Implement train module
+    - [x] Add tensorboard
     - [x] Train model
-    - [ ] Add tensorboard
 - [x] Evaluation
     - [x] Inference module
 
