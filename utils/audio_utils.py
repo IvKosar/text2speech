@@ -3,10 +3,9 @@ import numpy as np
 
 
 def save_wav(wav, path, sample_rate):
-    wav *= 32767 / max(0.01, np.max(np.abs(wav)))
-    # Output a time series as a .wav file
-    librosa.output.write_wav(path=path, y=wav.astype(np.float), sr=sample_rate, norm=False)
-
+    # wav *= 32767 / max(0.01, np.max(np.abs(wav)))
+    # sf.write(path, wav, sample_rate)
+    librosa.output.write_wav(path, wav, sample_rate)
 
 def load_wav(filename, sample_rate):
     # Load an audio file as a floating point time series
