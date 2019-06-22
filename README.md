@@ -56,11 +56,10 @@ The output is generated audio. It has taken ~2 seconds for generation on GPU GeF
 
 ##### Other generated examples
 
-| `It was a great day` | `I love Machine Learning` | `My name is Pytorch and I live on cuda` | `I gonna take my horse to the old town road` |
-|-------|-------|-------|-------|
-| [link](http://marianpetruk.github.com/projects/text2speech/generated/itwaagrda.wav) , [alt_link](generated_audio/itwaagrda.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/ilomale.wav) , [alt_link](generated_audio/ilomale.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/mynaispyanilioncu.wav) , [alt_link](generated_audio/mynaispyanilioncu.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/igotamyhototholtoro.wav) , [alt_link](generated_audio/igotamyhototholtoro.wav) |
-
-
+| Text| `It was a great day` | `I love Machine Learning` | `My name is Pytorch and I live on cuda` | `I gonna take my horse to the old town road` |
+|-------|-------|-------|-------|-------|
+| Generated speech in wav | [link](http://marianpetruk.github.com/projects/text2speech/generated/itwaagrda.wav) , [alt_link](generated_audio/wav/itwaagrda.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/ilomale.wav) , [alt_link](generated_audio/wav/ilomale.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/mynaispyanilioncu.wav) , [alt_link](generated_audio/wav/mynaispyanilioncu.wav) | [link](http://marianpetruk.github.com/projects/text2speech/generated/igotamyhototholtoro.wav) , [alt_link](generated_audio/wav/igotamyhototholtoro.wav) |
+| Converted wav to mp3 | [link](generated_audio/converted_to_mp3/itwaagrda.mp3) | [link](generated_audio/converted_to_mp3/ilomale.mp3) | [link](generated_audio/converted_to_mp3/mynaispyanilioncu.mp3) | [link](generated_audio/converted_to_mp3/igotamyhototholtoro.mp3) |
 
 ## Dataset
 For our project we choose to use [LJ Speech Dataset](https://keithito.com/LJ-Speech-Dataset/).
