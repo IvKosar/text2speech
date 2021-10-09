@@ -41,12 +41,14 @@ def save_checkpoint(model, optimizer, model_loss, out_path,
     print("\n | > Checkpoint saving : {}".format(checkpoint_path))
 
     new_state_dict = _trim_model_state_dict(model.state_dict())
-    state = {'model': new_state_dict,
-             'optimizer': optimizer.state_dict(),
-             'step': current_step,
-             'epoch': epoch,
-             'linear_loss': model_loss,
-             'date': datetime.date.today().strftime("%B %d, %Y")}
+    state = {
+        'model': new_state_dict,
+        'optimizer': optimizer.state_dict(),
+        'step': current_step,
+        'epoch': epoch,
+        'linear_loss': model_loss,
+        'date': datetime.date.today().strftime("%B %d, %Y")
+    }
     save(state, checkpoint_path)
 
 
