@@ -31,21 +31,41 @@ def train():
     parameters = dict(audio_configs)
     parameters["text_cleaner"] = configs["text_cleaner"]
     parameters["outputs_per_step"] = configs["r"]
-    train_dataset = TextSpeechDataset(root_dir=data_configs["data_path"],
-                                      annotations_file=data_configs["annotations_train"], parameters=parameters)
-    train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True,
-                              collate_fn=train_dataset.collate_fn,
-                              num_workers=num_workers, drop_last=False, pin_memory=True)
+    train_dataset = TextSpeechDataset(
+        root_dir=data_configs["data_path"],
+        annotations_file=data_configs["annotations_train"],
+        parameters=parameters
+    )
+    train_loader = DataLoader(
+        dataset=train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        collate_fn=train_dataset.collate_fn,
+        num_workers=num_workers,
+        drop_last=False,
+        pin_memory=True
+    )
 
-    val_dataset = TextSpeechDataset(root_dir=data_configs["data_path"],
-                                    annotations_file=data_configs["annotations_val"], parameters=parameters)
-    val_loader = DataLoader(dataset=val_dataset, batch_size=eval_batch_size, num_workers=num_workers,
-                            collate_fn=val_dataset.collate_fn, drop_last=False, pin_memory=True)
+    val_dataset = TextSpeechDataset(
+        root_dir=data_configs["data_path"],
+        annotations_file=data_configs["annotations_val"],
+        parameters=parameters
+    )
+    val_loader = DataLoader(
+        dataset=val_dataset,
+        batch_size=eval_batch_size,
+        num_workers=num_workers,
+        collate_fn=val_dataset.collate_fn,
+        drop_last=False,
+        pin_memory=True
+    )
 
-    model = Tacotron(embedding_dim=configs.pop("embedding_size"),
-                     linear_dim=audio_configs["frequency"],
-                     mel_dim=audio_configs["mels_size"],
-                     r=configs.pop("r"))
+    model = Tacotron(
+        embedding_dim=configs.pop("embedding_size"),
+        linear_dim=audio_configs["frequency"],
+        mel_dim=audio_configs["mels_size"],
+        r=configs.pop("r")
+    )
 
     if use_cuda:
         model = torch.nn.DataParallel(model.to("cuda"))
@@ -61,13 +81,17 @@ def train():
         audio_signal = run_epoch(model, train_loader, optimizer, criterion, metric_counter, epoch, n_priority_freq)
         run_validate(model, val_loader, criterion, metric_counter, n_priority_freq)
         if metric_counter.update_best_model():
-            torch.save(model.state_dict(), os.path.join(os.path.join(WEIGHTS_SAVE_PATH,
-                                                                     f"best_{configs['experiment_name']}.pth.tar")))
+            torch.save(
+                model.state_dict(),
+                os.path.join(WEIGHTS_SAVE_PATH, f"best_{configs['experiment_name']}.pth.tar")
+            )
             audio_signal = train_dataset.ap.spectrogram_to_wav(audio_signal.T)
             metric_counter.write_audio_to_tensorboard("Audio", audio_signal, epoch, audio_configs["sample_rate"])
 
-        torch.save(model.state_dict(), os.path.join(os.path.join(WEIGHTS_SAVE_PATH,
-                                                                 f"last_{configs['experiment_name']}.pth.tar")))
+        torch.save(
+            model.state_dict(),
+            os.path.join(WEIGHTS_SAVE_PATH, f"last_{configs['experiment_name']}.pth.tar")
+        )
         print(metric_counter.loss_message())
         logging.debug(
             f"Experiment Name: {configs['experiment_name']}, Epoch: {epoch}, Loss: {metric_counter.loss_message()}")
@@ -101,10 +125,17 @@ def run_epoch(model, dataloader, optimizer, criterion, metric_counter, epoch, n_
 
         # loss computation
         mel_loss = criterion(inputs=mel_output, targets=mels, lengths=mel_lengths)
-        linear_loss = 0.5 * criterion(inputs=linear_output, targets=linears, lengths=mel_lengths) \
-                      + 0.5 * criterion(linear_output[:, :, :n_priority_freq],
-                                        linears[:, :, :n_priority_freq],
-                                        mel_lengths)
+        criterion_1 = criterion(
+            inputs=linear_output,
+            targets=linears,
+            lengths=mel_lengths
+        )
+        criterion_2 = criterion(
+            inputs=linear_output[:, :, :n_priority_freq],
+            targets=linears[:, :, :n_priority_freq],
+            lengths=mel_lengths
+        )
+        linear_loss = 0.5 * criterion_1 + 0.5 * criterion_2
         total_loss = mel_loss + linear_loss
         total_loss.backward()
         optimizer.step()
@@ -131,9 +162,17 @@ def run_validate(model, dataloader, criterion, metric_counter, n_priority_freq):
                 mel_lengths = mel_lengths.cuda()
 
             mel_outputs, linear_outputs, alignments = model.forward(characters=texts, mel_specs=mels)
-            linear_loss = 0.5 * criterion(inputs=linear_outputs, targets=linears, lengths=mel_lengths) \
-                          + 0.5 * criterion(inputs=linear_outputs[:, :, :n_priority_freq],
-                                            targets=linears[:, :, :n_priority_freq], lengths=mel_lengths)
+            criterion_1 = criterion(
+                inputs=linear_outputs,
+                targets=linears,
+                lengths=mel_lengths
+            )
+            criterion_2 = criterion(
+                inputs=linear_outputs[:, :, :n_priority_freq],
+                targets=linears[:, :, :n_priority_freq],
+                lengths=mel_lengths
+            )
+            linear_loss = 0.5 * criterion_1 + 0.5 * criterion_2
             mel_loss = criterion(inputs=mel_outputs, targets=mels, lengths=mel_lengths)
 
             avg_linear_loss += linear_loss.item()
@@ -143,6 +182,7 @@ def run_validate(model, dataloader, criterion, metric_counter, n_priority_freq):
     avg_linear_loss /= (iter + 1)
     avg_mel_loss /= (iter + 1)
     avg_total_loss = avg_mel_loss + avg_linear_loss
+    return avg_total_loss
 
 
 if __name__ == "__main__":
