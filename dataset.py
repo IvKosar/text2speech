@@ -19,14 +19,18 @@ class TextSpeechDataset(Dataset):
         self.outputs_per_step = parameters["outputs_per_step"]
         self.sample_rate = parameters["sample_rate"]
 
-        self.ap = AudioProcessor(sample_rate=self.sample_rate, preemphasis=parameters["preemphasis"],
-                                 frequency=parameters["frequency"], frame_length=parameters["frame_length"],
-                                 frame_shift=parameters["frame_shift"], min_dbs=parameters["min_dbs"],
-                                 ref_dbs=parameters["ref_dbs"],
-                                 mels_size=parameters["mels_size"],
-                                 griff_lim_iters=parameters["griff_lim_iters"],
-                                 power=parameters["spectro_power"]
-                                 )
+        self.ap = AudioProcessor(
+            sample_rate=self.sample_rate,
+            preemphasis=parameters["preemphasis"],
+            frequency=parameters["frequency"],
+            frame_length=parameters["frame_length"],
+            frame_shift=parameters["frame_shift"],
+            min_dbs=parameters["min_dbs"],
+            ref_dbs=parameters["ref_dbs"],
+            mels_size=parameters["mels_size"],
+            griff_lim_iters=parameters["griff_lim_iters"],
+            power=parameters["spectro_power"]
+        )
 
     def __len__(self):
         return self.annotations.shape[0]
@@ -43,9 +47,9 @@ class TextSpeechDataset(Dataset):
         wavs = list(map(lambda sample: sample["wav"], batch))
         texts = list(map(lambda sample: sample["text"], batch))
 
-        max_text_len = np.max(list(map(lambda txt: len(txt), texts)))
+        max_text_len = np.max(list(map(len, texts)))
         texts = np.stack(list(map(lambda txt: pad_data(txt, max_text_len), texts))).astype(np.int32)
-        max_wav_len = np.max(list(map(lambda waveform: len(waveform), wavs)))
+        max_wav_len = np.max(list(map(len, wavs)))
         wavs = np.stack(list(map(lambda waveform: pad_data(x=waveform, length=max_wav_len), wavs))).astype(np.int32)
 
         linears = list(
